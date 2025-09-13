@@ -432,19 +432,38 @@
   let storedChecking = 76000.00;
   let storedSavings = 1500.00;
 
+  // 30 realistic transactions (all amounts absolute >= 20000)
   let storedTransactions = [
-    {date:'Sep 12, 2025', description:'Transfer from Posh MFB — Payroll (ACME Corp)', amount:32,000.00, type:'credit', status:'Completed'},
-    {date:'Sep 11, 2025', description:'Transfer to John Doe — Rent', amount:-25,000.00, type:'debit', status:'Completed'},
-    {date:'Sep 10, 2025', description:'Utility — Electric Co.', amount:-12,000.45, type:'debit', status:'Completed'},
-    {date:'Sep 09, 2025', description:'SuperMart — Groceries', amount:-708.92, type:'debit', status:'Completed'},
-    {date:'Sep 07, 2025', description:'Transfer from Posh MFB — Refund (Online Store)', amount:4,500.00, type:'credit', status:'Completed'},
-    {date:'Sep 05, 2025', description:'ATM Withdrawal — Downtown ATM', amount:-20,000.00, type:'debit', status:'Completed'},
-    {date:'Sep 03, 2025', description:'Mobile Top-up', amount:-25.00, type:'debit', status:'Completed'},
-    {date:'Aug 28, 2025', description:'Transfer from Posh MFB — Rent Received', amount:12,000.00, type:'credit', status:'Completed'},
-    {date:'Aug 20, 2025', description:'Online Subscription', amount:-14.99, type:'debit', status:'Completed'},
-    {date:'Aug 15, 2025', description:'POS — Coffee Shop', amount:-9.80, type:'debit', status:'Completed'},
-    {date:'Aug 10, 2025', description:'Transfer from Posh MFB — Bonus', amount:15,000.00, type:'credit', status:'Completed'},
-    {date:'Aug 01, 2025', description:'Wire — Savings to External', amount:-10,000.00, type:'debit', status:'Failed'}
+    {date:'Sep 12, 2025', description:'Transfer from Posh MFB — Payroll (ACME Corp)', amount:32000.00, type:'credit', status:'Completed'},
+    {date:'Sep 11, 2025', description:'Transfer to John Doe — Rent', amount:-25000.00, type:'debit', status:'Completed'},
+    {date:'Sep 10, 2025', description:'Utility — Electric Co.', amount:-20000.45, type:'debit', status:'Completed'},
+    {date:'Sep 09, 2025', description:'SuperMart — Groceries', amount:-20078.92, type:'debit', status:'Completed'},
+    {date:'Sep 08, 2025', description:'Transfer from Posh MFB — Refund (Online Store)', amount:45000.00, type:'credit', status:'Completed'},
+    {date:'Sep 07, 2025', description:'ATM Withdrawal — Downtown ATM', amount:-20000.00, type:'debit', status:'Completed'},
+    {date:'Sep 06, 2025', description:'Transfer to Jane Smith — Invoice 342', amount:-45000.00, type:'debit', status:'Completed'},
+    {date:'Sep 05, 2025', description:'Mobile Top-up — Telco', amount:-25000.00, type:'debit', status:'Completed'},
+    {date:'Sep 04, 2025', description:'POS — Coffee Shop', amount:-20009.80, type:'debit', status:'Completed'},
+    {date:'Sep 03, 2025', description:'Transfer from Posh MFB — Rent Received', amount:120000.00, type:'credit', status:'Completed'},
+    {date:'Sep 02, 2025', description:'Pharmacy — Health', amount:-20034.55, type:'debit', status:'Completed'},
+    {date:'Sep 01, 2025', description:'PayPal — Incoming', amount:200500.00, type:'credit', status:'Completed'},
+    {date:'Aug 30, 2025', description:'Transfer from Posh MFB — Bonus', amount:22000.00, type:'credit', status:'Completed'},
+    {date:'Aug 28, 2025', description:'Online Subscription — Streaming', amount:-20014.99, type:'debit', status:'Completed'},
+    {date:'Aug 26, 2025', description:'Transfer to External — Savings Sweep', amount:-20000.00, type:'debit', status:'Completed'},
+    {date:'Aug 24, 2025', description:'SuperMart — Groceries', amount:-20096.47, type:'debit', status:'Completed'},
+    {date:'Aug 22, 2025', description:'Transfer from Posh MFB — Client Payment', amount:220000.00, type:'credit', status:'Completed'},
+    {date:'Aug 20, 2025', description:'Fuel Station — Petrol', amount:-20045.00, type:'debit', status:'Completed'},
+    {date:'Aug 18, 2025', description:'POS — Electronics Store', amount:-200349.99, type:'debit', status:'Completed'},
+    {date:'Aug 15, 2025', description:'POS — Coffee Shop', amount:-20009.80, type:'debit', status:'Completed'},
+    {date:'Aug 12, 2025', description:'Transfer from Posh MFB — Refund (Market)', amount:20038.50, type:'credit', status:'Completed'},
+    {date:'Aug 10, 2025', description:'Transfer to John Doe — Loan Repayment', amount:-200600.00, type:'debit', status:'Completed'},
+    {date:'Aug 08, 2025', description:'Utility — Water', amount:-20042.75, type:'debit', status:'Completed'},
+    {date:'Aug 05, 2025', description:'Transfer from Posh MFB — Salary Advance', amount:120000.00, type:'credit', status:'Completed'},
+    {date:'Aug 03, 2025', description:'Online Marketplace — Purchase', amount:-20085.20, type:'debit', status:'Completed'},
+    {date:'Jul 30, 2025', description:'Transfer from Posh MFB — Rent Share', amount:50000.00, type:'credit', status:'Completed'},
+    {date:'Jul 25, 2025', description:'POS — Pharmacy', amount:-20022.10, type:'debit', status:'Completed'},
+    {date:'Jul 20, 2025', description:'Wire — Savings to External', amount:-20000.00, type:'debit', status:'Failed'},
+    {date:'Jul 15, 2025', description:'Transfer from Posh MFB — Customer Refund', amount:20075.00, type:'credit', status:'Completed'},
+    {date:'Jul 10, 2025', description:'POS — Grocery Market', amount:-20064.30, type:'debit', status:'Completed'}
   ];
 
   /* ---------------- DOM refs ---------------- */
@@ -659,7 +678,7 @@
               <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
                 <div>
                   <h3 style="margin:0">Recent activity</h3>
-                  <div class="sub">Latest debits and credits</div>
+                  <div class="sub">Latest debits and credits (30 items)</div>
                 </div>
                 <div style="display:flex;gap:10px;align-items:center">
                   <button class="btn ghost" onclick="downloadCsv()">Export</button>
@@ -709,7 +728,6 @@
     if(type === 'transfer'){
       confirmTitle.textContent = 'Move funds to savings';
       confirmMessage.textContent = 'Do you want to move your funds to savings?';
-      // confirmYes will show repayment message per earlier spec
     } else if(type === 'withdraw'){
       confirmTitle.textContent = 'Withdraw funds';
       confirmMessage.textContent = 'Proceed to withdraw?';
@@ -721,7 +739,7 @@
   confirmNo.addEventListener('click', ()=>{ confirmModal.style.display='none'; confirmModal.setAttribute('aria-hidden','true'); currentConfirmAction=null; });
   confirmYes.addEventListener('click', ()=>{
     if(!currentConfirmAction){ confirmModal.style.display='none'; confirmModal.setAttribute('aria-hidden','true'); return; }
-    // show repayment error for both transfer & withdraw as requested
+    // per request: show repayment message (same for transfer & withdraw)
     showToast('❌ Complete your second repayment Loan', 3000);
     confirmModal.style.display='none'; confirmModal.setAttribute('aria-hidden','true');
     currentConfirmAction = null;
@@ -806,7 +824,6 @@
     document.body.classList.remove('logged-in');
     if(profileBlock) profileBlock.classList.add('hidden');
     showToast('Logged out');
-    // Ensure landing quick-preview is hidden until login
   }
 
   /* ---------------- utilities ---------------- */
