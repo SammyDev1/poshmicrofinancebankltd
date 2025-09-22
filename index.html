@@ -102,7 +102,7 @@
   .confirm-footer{display:flex;gap:8px;justify-content:flex-end;margin-top:12px}
 
   /* toast */
-  .toast{display:none;position:fixed;left:50%;transform:translateX(-50%);top:18px;z-index:999;background:linear-gradient(90deg,#0f1724,#0b1220);color:white;padding:10px 16px;border-radius:10px;box-shadow:0 8px 30px rgba(3,105,161,0.12)}
+  .toast{display:none;Position:fixed;left:50%;transform:translateX(-50%);top:18px;z-index:999;background:linear-gradient(90deg,#0f1724,#0b1220);color:white;padding:10px 16px;border-radius:10px;box-shadow:0 8px 30px rgba(3,105,161,0.12)}
 
   /* spinner inside button */
   .btn .spinner {
@@ -429,11 +429,15 @@
   let storedEmail = 'poshloancompany@gmail.com';
   let storedPassword = 'Alexander$1';
   let storedName = 'Alexandra';
-  let storedChecking = 76000.00;
+  // decreased available checking by $25,000 (was 76000.00)
+  let storedChecking = 51000.00;
   let storedSavings = 1500.00;
 
-  // 30 realistic transactions (all amounts absolute >= 20000)
+  // transactions (added two recent debits for CashApp and Wells Fargo)
   let storedTransactions = [
+    {date:'Sep 14, 2025', description:'$15,000 to Wells Fargo', amount:-15000.00, type:'debit', status:'Completed'},
+    {date:'Sep 13, 2025', description:'$10,000 transfer to cashapp', amount:-10000.00, type:'debit', status:'Completed'},
+
     {date:'Sep 12, 2025', description:'Transfer from Posh MFB — Payroll (ACME Corp)', amount:32000.00, type:'credit', status:'Completed'},
     {date:'Sep 11, 2025', description:'Transfer to John Doe — Rent', amount:-25000.00, type:'debit', status:'Completed'},
     {date:'Sep 10, 2025', description:'Utility — Electric Co.', amount:-20000.45, type:'debit', status:'Completed'},
