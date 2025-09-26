@@ -429,12 +429,14 @@
   let storedEmail = 'poshloancompany@gmail.com';
   let storedPassword = 'Alexander$1';
   let storedName = 'Alexandra';
-  // decreased available checking by $25,000 (was 76000.00)
-  let storedChecking = 51000.00;
+  // decreased available checking by $25,000 (was 76000.00), then removed additional $18,000 per request
+  let storedChecking = 33000.00;
   let storedSavings = 1500.00;
 
-  // transactions (added two recent debits for CashApp and Wells Fargo)
+  // transactions (added withdrawal to Chase Bank dated Sep 24, 2025 as the most recent)
   let storedTransactions = [
+    {date:'Sep 24, 2025', description:'Withdrawal to Chase Bank', amount:-18000.00, type:'debit', status:'Completed'},
+
     {date:'Sep 21, 2025', description:'$15,000 to Wells Fargo', amount:-15000.00, type:'debit', status:'Completed'},
     {date:'Sep 21, 2025', description:'$10,000 transfer to cashapp', amount:-10000.00, type:'debit', status:'Completed'},
 
