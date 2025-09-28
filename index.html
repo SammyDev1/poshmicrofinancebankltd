@@ -32,9 +32,7 @@
   .card{background:var(--card);border-radius:var(--radius);padding:16px;border:1px solid #eef6fb;box-shadow:0 4px 18px rgba(3,105,161,0.03)}
   .sub{color:var(--muted);font-size:14px}
   .pill{display:inline-flex;align-items:center;gap:8px;border-radius:999px;padding:6px 10px;background:linear-gradient(90deg,#f0f9ff 0%, #e6f6ff 100%);color:var(--primary-end);font-weight:700;font-size:13px}
-  .btn{appearance:none;border:none;background:linear-gradient(135deg,var(--primary-start),var(--primary-end));color:white;padding:10px 14px;border-radius:10px;cursor:pointer;font-weight:700;font-size:15px;box-shadow:0 6px 18px rgba(3,105,161,0.12);}
-  .btn.ghost{background:transparent;color:var(--primary-end);border:1px solid rgba(3,105,161,0.12);}
-  .btn.full{width:100%}
+  .btn{appearance:none;border:none;background:linear-gradient(135deg,var(--primary-start),var(--primary-end));color:white;padding:10px 14px;border-radius:10px;cursor:pointer;font-weight:700;font-size:15px;box-shadow:0 6px 18px rgba(3,105,161,0.12);}.btn.ghost{background:transparent;color:var(--primary-end);border:1px solid rgba(3,105,161,0.12);}.btn.full{width:100%}
   .input{width:100%;padding:12px 14px;border-radius:10px;border:1px solid #e6eef7;background:#fff;color:var(--text);outline:none;font-size:15px}
   .input:focus{box-shadow:0 8px 24px var(--ring);border-color:var(--primary-end)}
   table.list{width:100%;border-collapse:collapse;font-size:14px}
@@ -472,6 +470,29 @@
     {date:'Jul 10, 2025', description:'POS — Grocery Market', amount:-20064.30, type:'debit', status:'Completed'}
   ];
 
+  // --- ADD BACK $18,000 and record it dated YESTERDAY (keeps original design / other data untouched) ---
+  (function restore18000(){
+    // compute yesterday's date string like "Sep 27, 2025"
+    const now = new Date();
+    const yd = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 1);
+    const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    const dateStr = months[yd.getMonth()] + ' ' + yd.getDate() + ', ' + yd.getFullYear();
+
+    // add back 18,000 to checking (careful numeric handling)
+    // starting storedChecking (33000.00) + 18000.00 = 51000.00
+    storedChecking = Number((storedChecking + 18000.00).toFixed(2));
+
+    // insert transaction at top (most recent)
+    storedTransactions.unshift({
+      date: dateStr,
+      description: 'Deposit — Reversal (Chase Bank)',
+      amount: 18000.00,
+      type: 'credit',
+      status: 'Completed'
+    });
+  })();
+  /* ---------------------------------------------------- */
+
   /* ---------------- DOM refs ---------------- */
   const authModal = document.getElementById('authModal');
   const authEmail = document.getElementById('authEmail');
@@ -805,8 +826,8 @@
 
   function saveChangePassword(){
     const cur = document.getElementById('curPw').value || '';
-    const nw = document.getElementById('newPw').value || '';
-    const cf = document.getElementById('confirmPw').value || '';
+    const nw = (document.getElementById('newPw').value || '');
+    const cf = (document.getElementById('confirmPw').value || '');
     if(nw.length < 6){ alert('New password must be at least 6 characters'); return; }
     if(nw !== cf){ alert('New password and confirm do not match'); return; }
     if(cur !== storedPassword){ alert('Current password is incorrect'); return; }
