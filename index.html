@@ -43,4 +43,862 @@
 
   /* header/nav */
   header{position:sticky;top:0;background:rgba(255,255,255,0.98);backdrop-filter:blur(6px);border-bottom:1px solid #eef6fb;z-index:140}
-  .nav{display:flex;align-items:center;jus
+  .nav{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 0}
+  .brand{display:flex;align-items:center;gap:12px}
+  .logo{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;font-weight:800;color:white;background:linear-gradient(135deg,var(--primary-start),var(--primary-end));box-shadow:0 8px 20px rgba(3,105,161,0.12);font-size:15px}
+  .brand h1{font-size:18px;margin:0;color:var(--text)}
+  .navlinks{display:flex;gap:14px;align-items:center}
+  .navlinks a{color:var(--text);font-weight:600}
+  .nav-right{display:flex;align-items:center;gap:10px}
+
+  /* profile block (hidden on landing until login) */
+  .profile-block{display:flex;align-items:center;gap:10px;transition:opacity .28s ease,visibility .28s ease;}
+  .profile-block.hidden{opacity:0;visibility:hidden;height:0;overflow:hidden}
+  body.logged-in .profile-block{opacity:1;visibility:visible;height:auto}
+
+  .avatar{display:inline-grid;place-items:center;width:40px;height:40px;border-radius:999px;background:linear-gradient(135deg,#e6faff,#e6f9ff);color:var(--primary-end);font-weight:800;border:1px solid rgba(3,105,161,0.06);cursor:pointer}
+  .profileName{font-weight:700;color:var(--text);font-size:14px}
+
+  /* hero & layout */
+  .hero{padding:36px 0}
+  .wrap{display:grid;grid-template-columns:1fr 420px;gap:20px;align-items:center}
+  .hero h2{font-size:28px;margin:0 0 8px}
+  .kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:18px}
+
+  /* balances split */
+  .balance-split{display:flex;align-items:baseline;gap:6px}
+  .balance-main{font-weight:800;font-size:26px}
+  .balance-cents{font-size:14px;color:var(--muted);transform:translateY(-4px)}
+
+  /* quick balances preview: hidden on landing (unless logged-in) */
+  .balance-preview { display:none; }
+  body.logged-in .balance-preview { display:block; }
+
+  /* dashboard specifics */
+  .dashbar{display:flex;justify-content:space-between;align-items:center;padding:12px 0;background:transparent;gap:12px}
+  .transactions-section{margin-top:18px}
+  .tx-wrapper{overflow:auto;background:transparent}
+  .tx-wrapper table{min-width:720px} /* allows horizontal scroll on small screens */
+
+  /* make dashboard fill viewport and allow inner scrolling on mobile */
+  #appDashboard {
+    position:fixed;
+    inset:0;
+    background:var(--surface);
+    overflow:auto;
+    -webkit-overflow-scrolling:touch;
+    z-index:130;
+    padding-bottom:32px;
+  }
+  #appDashboard #dashboardMain {
+    min-height: calc(100vh - 120px); /* keep main content within viewport */
+  }
+
+  /* modal */
+  .modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(15,23,36,0.35);padding:18px;z-index:220}
+  .modal .box{max-width:540px;width:100%;max-height:92vh;overflow:auto;border-radius:12px}
+  .confirm-footer{display:flex;gap:8px;justify-content:flex-end;margin-top:12px}
+
+  /* toast */
+  .toast{display:none;Position:fixed;left:50%;transform:translateX(-50%);top:18px;z-index:999;background:linear-gradient(90deg,#0f1724,#0b1220);color:white;padding:10px 16px;border-radius:10px;box-shadow:0 8px 30px rgba(3,105,161,0.12)}
+
+  /* spinner inside button */
+  .btn .spinner {
+    display:inline-block;
+    width:14px;height:14px;border:2px solid rgba(255,255,255,0.35);
+    border-top-color: white;border-radius:50%;margin-right:8px;vertical-align:middle;
+    animation:spin 1s linear infinite;
+  }
+  @keyframes spin { from { transform:rotate(0deg)} to { transform:rotate(360deg)} }
+
+  /* mobile/responsive */
+  .mobile-hamb { display:none; }
+  @media (max-width:980px){
+    .wrap{grid-template-columns:1fr}
+    .navlinks{display:none}
+    .logo{width:40px;height:40px}
+    .mobile-hamb { display:inline-flex; position:fixed; top:12px; right:12px; z-index:300; background:transparent; border:0; padding:8px; border-radius:8px; }
+    /* hide header profile block on small screens so menu contains those actions */
+    .profile-block { display:none !important; }
+  }
+  @media (max-width:520px){
+    body{font-size:15px}
+    .brand h1{font-size:16px}
+    .logo{width:36px;height:36px;font-size:13px}
+    .btn{font-size:15px;padding:12px 14px}
+    .input{padding:12px}
+    .wrap{gap:12px}
+    .hero h2{font-size:20px}
+    .profileName{display:block}
+    .tx-wrapper table{min-width:650px}
+  }
+
+  /* mobile menu modal content */
+  .mobileMenuContent { max-width:420px; width:100%; padding:16px; border-radius:12px; background:var(--card); }
+  .mobileMenuContent .links { display:flex; flex-direction:column; gap:12px; margin-top:12px; }
+  .mobileMenuContent .links a { font-weight:700; color:var(--primary-end); padding:10px; border-radius:8px; }
+  .mobileMenuContent .links .sep { margin-top:8px; border-top:1px solid #eef6fb; padding-top:8px; }
+  .muted-block { color:var(--muted); font-size:13px; margin-top:6px; }
+
+  /* balances grid helper — will stack on small screens */
+  .balances-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  @media (max-width:520px){
+    .balances-grid { grid-template-columns:1fr !important; }
+    .balances-grid > * { margin-bottom:8px; }
+  }
+</style>
+</head>
+<body>
+  <!-- Header -->
+  <header id="landingHeader">
+    <div class="container nav">
+      <div class="brand">
+        <div class="logo">PM</div>
+        <h1>Posh Microfinance Bank</h1>
+      </div>
+
+      <nav style="display:flex;align-items:center;gap:12px">
+        <div class="navlinks" id="navlinks">
+          <a href="#products">Products</a>
+          <a href="#features">Features</a>
+          <a href="#security">Security</a>
+          <a href="#support">Support</a>
+        </div>
+
+        <div class="nav-right">
+          <button class="btn ghost" onclick="openAuth('signin')">Sign in</button>
+          <button class="btn" onclick="openAuth('signup')">Open account</button>
+
+          <div style="width:12px"></div>
+
+          <!-- profile block: hidden on landing, revealed when logged-in -->
+          <div class="profile-block hidden" id="profileBlock">
+            <div class="avatar" id="navAvatar">A</div>
+            <div style="display:flex;flex-direction:column;align-items:flex-start">
+              <div class="profileName" id="navProfileName">Alexandra</div>
+              <small class="sub">Account holder</small>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Mobile hamburger (visible on small screens) -->
+  <button class="mobile-hamb" id="mobileToggleBtn" aria-label="Open menu" onclick="toggleMobileMenu()">
+    <svg width="22" height="14" viewBox="0 0 22 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="22" height="2" rx="1" fill="#0369a1"></rect>
+      <rect y="6" width="22" height="2" rx="1" fill="#0369a1"></rect>
+      <rect y="12" width="22" height="2" rx="1" fill="#0369a1"></rect>
+    </svg>
+  </button>
+
+  <!-- Mobile menu (shared between landing & dashboard) -->
+  <div class="modal" id="mobileMenu" aria-hidden="true" style="display:none;align-items:flex-start;justify-content:flex-start;padding:12px">
+    <div class="mobileMenuContent shadow" style="margin:18px auto 0;">
+      <div style="display:flex;align-items:center;justify-content:space-between">
+        <div style="display:flex;align-items:center;gap:12px">
+          <div class="logo" style="width:44px;height:44px">PM</div>
+          <strong style="font-size:16px;color:var(--text)">Posh Microfinance Bank</strong>
+        </div>
+        <button class="btn ghost" onclick="toggleMobileMenu()">Close</button>
+      </div>
+      <div class="links">
+        <a href="#products" onclick="mobileLinkClick('#products')">Products</a>
+        <a href="#features" onclick="mobileLinkClick('#features')">Features</a>
+        <a href="#security" onclick="mobileLinkClick('#security')">Security</a>
+        <a href="#support" onclick="mobileLinkClick('#support')">Support</a>
+
+        <div class="sep"></div>
+
+        <a onclick="mobileSignIn()">Sign in</a>
+        <a onclick="mobileOpenAccount()">Open account</a>
+
+        <div class="sep"></div>
+
+        <!-- Profile/Settings/Logout visible in the menu for mobile -->
+        <a onclick="mobileOpenProfile()">Profile</a>
+        <a onclick="mobileSettings()">Settings</a>
+        <a onclick="logout()">Logout</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Landing (no dashboard until login) -->
+  <main id="landingMain">
+    <section class="hero">
+      <div class="container wrap">
+        <div>
+          <span class="pill">Modern • Secure • Client-focused</span>
+          <h2>Bank boldly.<br/>Manage money with speed, safety, and clarity.</h2>
+          <p class="sub">Accounts, cards, payments, and helpful insights tailored for microfinance clients.</p>
+
+          <div style="display:flex;gap:12px;margin-top:12px;flex-wrap:wrap">
+            <button class="btn" onclick="openAuth('signup')">Get started</button>
+            <button class="btn ghost" onclick="document.getElementById('features').scrollIntoView({behavior:'smooth'})">View features</button>
+          </div>
+
+          <div class="kpis" style="margin-top:18px">
+            <div class="card kpi"><span class="sub">Uptime</span><div style="font-weight:700">99.98%</div></div>
+            <div class="card kpi"><span class="sub">Settlement</span><div style="font-weight:700">T+1</div></div>
+            <div class="card kpi"><span class="sub">Support</span><div style="font-weight:700">24/7</div></div>
+          </div>
+        </div>
+
+        <!-- Quick balance card (hidden on landing; shown when logged-in) -->
+        <div class="card shadow balance-preview" id="quickBalances">
+          <h3 style="margin:0 0 8px">Quick balance</h3>
+          <p class="sub" style="margin:0 0 12px">Sign in to view or manage your accounts.</p>
+
+          <div class="balances-grid">
+            <div class="card balanceCard" style="padding:12px">
+              <div>
+                <span class="sub">Checking</span>
+                <div class="balance-split" style="margin-top:6px">
+                  <div class="balance-main" id="checkingBalancePreview">$76,000</div>
+                  <div class="balance-cents" id="checkingCentsPreview">.00</div>
+                </div>
+                <span class="tag ok" style="margin-top:8px;display:inline-block">● Active</span>
+              </div>
+            </div>
+
+            <div class="card balanceCard" style="padding:12px;border-left-color:var(--accent)">
+              <div>
+                <span class="sub">Savings</span>
+                <div class="balance-split" style="margin-top:6px">
+                  <div class="balance-main" id="savingsBalancePreview">$1,500</div>
+                  <div class="balance-cents" id="savingsCentsPreview">.00</div>
+                </div>
+                <span class="tag ok" style="margin-top:8px;display:inline-block">● Active</span>
+              </div>
+            </div>
+          </div>
+
+          <div style="margin-top:12px;display:flex;gap:10px;flex-wrap:wrap">
+            <button class="btn" onclick="openAuth('signin')">Sign in</button>
+            <button class="btn ghost" onclick="openAuth('signup')">Open account</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="features" style="padding-bottom:36px">
+      <div class="container">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+          <h3 style="margin:0">Features</h3>
+          <span class="pill">Client-focused</span>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+          <div class="card">
+            <h4 style="margin:0 0 8px">Accounts & Cards</h4>
+            <p class="sub">Manage checking and savings accounts with ease.</p>
+          </div>
+          <div class="card">
+            <h4 style="margin:0 0 8px">Payments</h4>
+            <p class="sub">Send payments, track history, and schedule transfers.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer id="landingFooter">
+    <div class="container" style="display:grid;grid-template-columns:1fr;gap:12px;padding:18px 0">
+      <div style="display:flex;align-items:center;gap:12px">
+        <div class="logo" style="width:40px;height:40px">PM</div>
+        <div>
+          <strong>Posh Microfinance Bank</strong><br/>
+          <small class="sub">© <span id="year"></span> Posh Microfinance Bank.</small>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Auth Modal -->
+  <div class="modal" id="authModal" data-mode="">
+    <div class="box card shadow">
+      <h3 id="authTitle" style="margin:0 0 6px">Welcome</h3>
+      <p class="sub" id="authDesc" style="margin:0 0 12px">Enter your credentials to continue</p>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
+        <div>
+          <label class="sub">Email</label>
+          <input class="input" id="authEmail" type="email" placeholder="you@example.com" />
+        </div>
+        <div>
+          <label class="sub">Password</label>
+          <input class="input" id="authPass" type="password" placeholder="••••••••" />
+        </div>
+      </div>
+
+      <div style="display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap">
+        <button class="btn" id="authContinue">Continue</button>
+        <button class="btn ghost" id="authCancel">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Confirm Modal (used for Transfer/Withdraw) -->
+  <div class="modal" id="confirmModal" aria-hidden="true">
+    <div class="box card shadow" style="max-width:520px">
+      <h3 id="confirmTitle">Confirm</h3>
+      <p class="sub" id="confirmMessage" style="margin-top:6px">Are you sure?</p>
+      <div class="confirm-footer">
+        <button class="btn ghost" id="confirmNo">No</button>
+        <button class="btn" id="confirmYes">Yes</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Profile Modal -->
+  <div class="modal" id="profileModal">
+    <div class="box card shadow">
+      <h3>Profile</h3>
+      <p class="sub">View / edit profile</p>
+      <div style="margin-top:8px;display:grid;gap:8px">
+        <div>
+          <label class="sub">Full name</label>
+          <input id="profileName" class="input" value="Alexandra" />
+        </div>
+        <div>
+          <label class="sub">Email</label>
+          <input id="profileEmail" class="input" value="poshloancompany@gmail.com" />
+        </div>
+      </div>
+      <div class="confirm-footer" style="margin-top:12px">
+        <button class="btn" onclick="saveProfile()">Save</button>
+        <button class="btn ghost" onclick="closeModal('profileModal')">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Settings Modal -->
+  <div class="modal" id="settingsModal">
+    <div class="box card shadow">
+      <h3>Settings</h3>
+      <p class="sub">Settings</p>
+      <div style="margin-top:8px">
+        <label class="sub">Notifications</label>
+        <select id="settingNotifications" class="input">
+          <option>Enabled</option>
+          <option>Disabled</option>
+        </select>
+      </div>
+      <div class="confirm-footer" style="margin-top:12px">
+        <button class="btn" onclick="saveSettings()">Save</button>
+        <button class="btn ghost" onclick="closeModal('settingsModal')">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Change Password Modal -->
+  <div class="modal" id="changePwModal">
+    <div class="box card shadow">
+      <h3>Change Password</h3>
+      <p class="sub">Password change (will not persist beyond this page)</p>
+      <div style="margin-top:8px;display:grid;gap:8px">
+        <div>
+          <label class="sub">Current password</label>
+          <input id="curPw" class="input" type="password" />
+        </div>
+        <div>
+          <label class="sub">New password</label>
+          <input id="newPw" class="input" type="password" />
+        </div>
+        <div>
+          <label class="sub">Confirm new password</label>
+          <input id="confirmPw" class="input" type="password" />
+        </div>
+      </div>
+      <div class="confirm-footer" style="margin-top:12px">
+        <button class="btn" onclick="saveChangePassword()">Change</button>
+        <button class="btn ghost" onclick="closeModal('changePwModal')">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div id="smallToast" class="toast"></div>
+
+<script>
+  /* ---------------- in-memory data ---------------- */
+  let storedEmail = 'poshloancompany@gmail.com';
+  let storedPassword = 'Alexander$1';
+  let storedName = 'Alexandra';
+  // decreased available checking by $25,000 (was 76000.00), then removed additional $18,000 per request
+  let storedChecking = 33000.00;
+  let storedSavings = 1500.00;
+
+  // transactions (added withdrawal to Chase Bank dated Sep 24, 2025 as the most recent)
+  let storedTransactions = [
+    {date:'Sep 24, 2025', description:'Withdrawal to Chase Bank', amount:-18000.00, type:'debit', status:'Completed'},
+
+    {date:'Sep 21, 2025', description:'$15,000 to Wells Fargo', amount:-15000.00, type:'debit', status:'Completed'},
+    {date:'Sep 21, 2025', description:'$10,000 transfer to cashapp', amount:-10000.00, type:'debit', status:'Completed'},
+
+    {date:'Sep 12, 2025', description:'Transfer from Posh MFB — Payroll (ACME Corp)', amount:32000.00, type:'credit', status:'Completed'},
+    {date:'Sep 11, 2025', description:'Transfer to John Doe — Rent', amount:-25000.00, type:'debit', status:'Completed'},
+    {date:'Sep 10, 2025', description:'Utility — Electric Co.', amount:-20000.45, type:'debit', status:'Completed'},
+    {date:'Sep 09, 2025', description:'SuperMart — Groceries', amount:-20078.92, type:'debit', status:'Completed'},
+    {date:'Sep 08, 2025', description:'Transfer from Posh MFB — Refund (Online Store)', amount:45000.00, type:'credit', status:'Completed'},
+    {date:'Sep 07, 2025', description:'ATM Withdrawal — Downtown ATM', amount:-20000.00, type:'debit', status:'Completed'},
+    {date:'Sep 06, 2025', description:'Transfer to Jane Smith — Invoice 342', amount:-45000.00, type:'debit', status:'Completed'},
+    {date:'Sep 05, 2025', description:'Mobile Top-up — Telco', amount:-25000.00, type:'debit', status:'Completed'},
+    {date:'Sep 04, 2025', description:'POS — Coffee Shop', amount:-20009.80, type:'debit', status:'Completed'},
+    {date:'Sep 03, 2025', description:'Transfer from Posh MFB — Rent Received', amount:120000.00, type:'credit', status:'Completed'},
+    {date:'Sep 02, 2025', description:'Pharmacy — Health', amount:-20034.55, type:'debit', status:'Completed'},
+    {date:'Sep 01, 2025', description:'PayPal — Incoming', amount:200500.00, type:'credit', status:'Completed'},
+    {date:'Aug 30, 2025', description:'Transfer from Posh MFB — Bonus', amount:22000.00, type:'credit', status:'Completed'},
+    {date:'Aug 28, 2025', description:'Online Subscription — Streaming', amount:-20014.99, type:'debit', status:'Completed'},
+    {date:'Aug 26, 2025', description:'Transfer to External — Savings Sweep', amount:-20000.00, type:'debit', status:'Completed'},
+    {date:'Aug 24, 2025', description:'SuperMart — Groceries', amount:-20096.47, type:'debit', status:'Completed'},
+    {date:'Aug 22, 2025', description:'Transfer from Posh MFB — Client Payment', amount:220000.00, type:'credit', status:'Completed'},
+    {date:'Aug 20, 2025', description:'Fuel Station — Petrol', amount:-20045.00, type:'debit', status:'Completed'},
+    {date:'Aug 18, 2025', description:'POS — Electronics Store', amount:-200349.99, type:'debit', status:'Completed'},
+    {date:'Aug 15, 2025', description:'POS — Coffee Shop', amount:-20009.80, type:'debit', status:'Completed'},
+    {date:'Aug 12, 2025', description:'Transfer from Posh MFB — Refund (Market)', amount:20038.50, type:'credit', status:'Completed'},
+    {date:'Aug 10, 2025', description:'Transfer to John Doe — Loan Repayment', amount:-200600.00, type:'debit', status:'Completed'},
+    {date:'Aug 08, 2025', description:'Utility — Water', amount:-20042.75, type:'debit', status:'Completed'},
+    {date:'Aug 05, 2025', description:'Transfer from Posh MFB — Salary Advance', amount:120000.00, type:'credit', status:'Completed'},
+    {date:'Aug 03, 2025', description:'Online Marketplace — Purchase', amount:-20085.20, type:'debit', status:'Completed'},
+    {date:'Jul 30, 2025', description:'Transfer from Posh MFB — Rent Share', amount:50000.00, type:'credit', status:'Completed'},
+    {date:'Jul 25, 2025', description:'POS — Pharmacy', amount:-20022.10, type:'debit', status:'Completed'},
+    {date:'Jul 20, 2025', description:'Wire — Savings to External', amount:-20000.00, type:'debit', status:'Failed'},
+    {date:'Jul 15, 2025', description:'Transfer from Posh MFB — Customer Refund', amount:20075.00, type:'credit', status:'Completed'},
+    {date:'Jul 10, 2025', description:'POS — Grocery Market', amount:-20064.30, type:'debit', status:'Completed' }
+  ];
+
+  // --- ADD BACK $18,000 and record it dated YESTERDAY (keeps original design / other data untouched) ---
+  (function restore18000(){
+    // compute yesterday's date string like "Sep 27, 2025"
+    const now = new Date();
+    const yd = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 1);
+    const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    const dateStr = months[yd.getMonth()] + ' ' + yd.getDate() + ', ' + yd.getFullYear();
+
+    // add back 18,000 to checking (careful numeric handling)
+    // starting storedChecking (33000.00) + 18000.00 = 51000.00
+    storedChecking = Number((storedChecking + 18000.00).toFixed(2));
+
+    // insert transaction at top (most recent)
+    storedTransactions.unshift({
+      date: dateStr,
+      description: 'Deposit — to Bank (Posh Bank)',
+      amount: 18000.00,
+      type: 'credit',
+      status: 'Completed'
+    });
+  })();
+  /* ---------------------------------------------------- */
+
+  /* ---------------- ADDITION: SUBTRACT $15,500 from checking (keeps rest untouched) ---------------- */
+  (function subtract15500(){
+    // subtract 15,500 from storedChecking (numeric safety)
+    storedChecking = Number((storedChecking - 15500.00).toFixed(2));
+    // (no other code modified and no transaction inserted per request)
+  })();
+  /* ----------------------------------------------------------------------------------------------- */
+
+  /* ---------------- INSERT: withdrawal to chase bank (yesterday) ---------------- */
+  (function insertWithdrawalToChaseBank(){
+    // compute yesterday's date string like "Sep 27, 2025"
+    const now = new Date();
+    const yd = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 1);
+    const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    const dateStr = months[yd.getMonth()] + ' ' + yd.getDate() + ', ' + yd.getFullYear();
+
+    // add a debit transaction for -15,500 dated yesterday with exact description requested
+    storedTransactions.unshift({
+      date: dateStr,
+      description: 'withdrawal to chase bank',
+      amount: -15500.00,
+      type: 'debit',
+      status: 'Completed'
+    });
+    // note: per your instruction, storedChecking is not modified here (it was already adjusted).
+  })();
+  /* ----------------------------------------------------------------------------------------------- */
+
+  /* ---------------- DOM refs ---------------- */
+  const authModal = document.getElementById('authModal');
+  const authEmail = document.getElementById('authEmail');
+  const authPass = document.getElementById('authPass');
+  const authContinue = document.getElementById('authContinue');
+  const authCancel = document.getElementById('authCancel');
+  const confirmModal = document.getElementById('confirmModal');
+  const confirmMessage = document.getElementById('confirmMessage');
+  const confirmTitle = document.getElementById('confirmTitle');
+  const confirmYes = document.getElementById('confirmYes');
+  const confirmNo = document.getElementById('confirmNo');
+  const mobileMenu = document.getElementById('mobileMenu');
+  const mobileToggleBtn = document.getElementById('mobileToggleBtn');
+  const profileBlock = document.getElementById('profileBlock');
+
+  /* ---------------- initial preview balances (for preview elements) ---------------- */
+  (function initPreviewBalances(){
+    const chk = splitCurrency(storedChecking);
+    const svgChkMain = document.getElementById('checkingBalancePreview');
+    const svgChkCents = document.getElementById('checkingCentsPreview');
+    if(svgChkMain) svgChkMain.textContent = chk.main;
+    if(svgChkCents) svgChkCents.textContent = chk.cents;
+
+    const sav = splitCurrency(storedSavings);
+    const svgSavMain = document.getElementById('savingsBalancePreview');
+    const svgSavCents = document.getElementById('savingsCentsPreview');
+    if(svgSavMain) svgSavMain.textContent = sav.main;
+    if(svgSavCents) svgSavCents.textContent = sav.cents;
+  })();
+
+  /* ---------------- mobile menu helpers ---------------- */
+  function toggleMobileMenu(){
+    if(!mobileMenu) return;
+    const open = mobileMenu.style.display === 'flex';
+    mobileMenu.style.display = open ? 'none' : 'flex';
+    mobileMenu.setAttribute('aria-hidden', String(open));
+  }
+  function mobileLinkClick(hash){
+    toggleMobileMenu();
+    const el = document.querySelector(hash);
+    if(el) el.scrollIntoView({behavior:'smooth'});
+  }
+  function mobileSignIn(){ toggleMobileMenu(); openAuth('signin'); }
+  function mobileOpenAccount(){ toggleMobileMenu(); openAuth('signup'); }
+  function mobileOpenProfile(){ toggleMobileMenu(); openProfile(); }
+  function mobileSettings(){ toggleMobileMenu(); openSettings(); }
+
+  /* ---------------- auth modal & sign-in processing ---------------- */
+  function openAuth(mode){
+    authModal.dataset.mode = mode;
+    document.getElementById('authTitle').textContent = mode === 'signin' ? 'Sign in' : 'Open an account';
+    document.getElementById('authDesc').textContent = mode === 'signin' ? 'Enter your credentials to continue' : 'Open account (currently disabled)';
+    authEmail.value = ''; authPass.value = '';
+    authModal.style.display = 'flex';
+    if(mobileMenu.style.display === 'flex') toggleMobileMenu();
+  }
+  authCancel.addEventListener('click', ()=>{ authModal.style.display='none'; });
+
+  authContinue.addEventListener('click', startAuthProcess);
+  function startAuthProcess(){
+    authContinue.disabled = true;
+    authCancel.disabled = true;
+    authEmail.disabled = true;
+    authPass.disabled = true;
+    const original = authContinue.innerHTML;
+    authContinue.innerHTML = '<span class="spinner"></span> Processing...';
+    setTimeout(()=>{
+      handleAuth(true);
+      authContinue.innerHTML = original;
+      authContinue.disabled = false;
+      authCancel.disabled = false;
+      authEmail.disabled = false;
+      authPass.disabled = false;
+    }, 3000);
+  }
+
+  function handleAuth(ok){
+    if(!ok){ authModal.style.display='none'; return; }
+    const mode = authModal.dataset.mode || 'signin';
+    const email = (authEmail.value || '').trim();
+    const pass = (authPass.value || '').trim();
+
+    if(mode === 'signup'){
+      alert('Account creation is currently disabled.');
+      authModal.style.display='none';
+      return;
+    }
+
+    if(email.toLowerCase() === storedEmail.toLowerCase() && pass === storedPassword){
+      authModal.style.display='none';
+      // show profile block and set logged-in class
+      document.body.classList.add('logged-in');
+      if(profileBlock) profileBlock.classList.remove('hidden');
+
+      // hide landing sections
+      const LH = document.getElementById('landingHeader');
+      const LM = document.getElementById('landingMain');
+      const LF = document.getElementById('landingFooter');
+      if(LH) LH.style.display = 'none';
+      if(LM) LM.style.display = 'none';
+      if(LF) LF.style.display = 'none';
+      showDashboard();
+    } else {
+      alert('❌ Invalid login. Please check your email and password.');
+    }
+  }
+
+  /* ---------------- toast ---------------- */
+  function showToast(msg, ms = 2000){
+    const t = document.getElementById('smallToast');
+    t.textContent = msg; t.style.display = 'block';
+    setTimeout(()=> t.style.display = 'none', ms);
+  }
+
+  /* ---------------- currency helpers ---------------- */
+  function splitCurrency(n){
+    const negative = n < 0;
+    const s = Math.abs(n).toFixed(2);
+    const parts = s.split('.');
+    const main = (negative ? '- $' : '$') + Number(parts[0]).toLocaleString();
+    const cents = '.' + parts[1];
+    return { main, cents };
+  }
+  function formatCurrency(n){
+    return (n < 0 ? '- $' : '$') + Math.abs(n).toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2});
+  }
+
+  /* ---------------- transactions rendering ---------------- */
+  function escapeHtml(str){
+    return String(str).replace(/[&<>"']/g, function(m){ return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]); });
+  }
+  function renderTransactionsHtml(){
+    return storedTransactions.map(tx=>{
+      const amtClass = tx.type === 'credit' ? 'credit' : 'debit';
+      const amtStr = formatCurrency(tx.amount);
+      const statusClass = tx.status === 'Failed' ? 'tag danger' : (tx.status === 'Completed' ? 'tag ok' : 'tag warn');
+      return `<tr>
+        <td>${escapeHtml(tx.date)}</td>
+        <td>${escapeHtml(tx.description)}</td>
+        <td class="${amtClass}">${amtStr}</td>
+        <td><span class="${statusClass}">${escapeHtml(tx.status)}</span></td>
+      </tr>`;
+    }).join('');
+  }
+
+  /* ---------------- dashboard creation ---------------- */
+  function showDashboard(){
+    // create a dashboard node
+    const existing = document.getElementById('appDashboard');
+    if(existing) return; // already shown
+
+    const dash = document.createElement('div');
+    dash.id = 'appDashboard';
+    dash.innerHTML = `
+      <div class="dashbar shadow" id="dashbar" style="padding:12px 16px;border-radius:12px;margin:16px;">
+        <div style="display:flex;gap:14px;align-items:center">
+          <div style="display:flex;flex-direction:column">
+            <small class="sub">Welcome back</small>
+            <strong style="font-size:18px" id="dashWelcomeName">${escapeHtml(storedName)}</strong>
+          </div>
+          <div style="width:10px"></div>
+          <div class="pill">Premium</div>
+        </div>
+
+        <div style="display:flex;gap:12px;align-items:center">
+          <button class="btn ghost" onclick="openProfile()">Profile</button>
+          <button class="btn ghost" onclick="openSettings()">Settings</button>
+          <button class="btn" onclick="logout()">Logout</button>
+        </div>
+      </div>
+
+      <section style="padding:10px 0 40px" id="dashboardMain">
+        <div class="container" style="display:grid;gap:16px">
+          <div style="display:grid;grid-template-columns:1fr;gap:12px">
+            <!-- balances -->
+            <div class="balances-grid">
+              <div class="card balanceCard shadow" style="padding:18px;border-left-color:var(--primary-end)">
+                <div style="display:flex;justify-content:space-between;align-items:center">
+                  <div>
+                    <small class="sub">Checking account</small>
+                    <div style="margin-top:6px" id="checkingBalanceDisplay"></div>
+                    <div class="muted-block">Account •••• 2453</div>
+                  </div>
+                  <div style="text-align:right">
+                    <button class="btn ghost" onclick="openConfirm('transfer')" style="padding:8px 10px">Transfer</button>
+                    <div style="height:8px"></div>
+                    <small class="sub">Available balance</small>
+                  </div>
+                </div>
+              </div>
+
+              <div class="card balanceCard shadow" style="padding:18px;border-left-color:var(--accent)">
+                <div style="display:flex;justify-content:space-between;align-items:center">
+                  <div>
+                    <small class="sub">Savings account</small>
+                    <div style="margin-top:6px" id="savingsBalanceDisplay"></div>
+                    <div class="muted-block">Account •••• 1102</div>
+                  </div>
+                  <div style="text-align:right">
+                    <button class="btn ghost" onclick="openConfirm('withdraw')" style="padding:8px 10px">Withdraw</button>
+                    <div style="height:8px"></div>
+                    <small class="sub">Locked funds</small>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- transactions -->
+            <div class="card shadow transactions-section" style="overflow:auto">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+                <div>
+                  <h3 style="margin:0">Recent activity</h3>
+                  <div class="sub">Latest debits and credits (30 items)</div>
+                </div>
+                <div style="display:flex;gap:10px;align-items:center">
+                  <button class="btn ghost" onclick="downloadCsv()">Export</button>
+                  <button class="btn" onclick="showAll()">View all</button>
+                </div>
+              </div>
+
+              <div class="tx-wrapper">
+                <table class="list" id="txTable">
+                  <thead><tr><th style="width:110px">Date</th><th>Description</th><th style="width:130px">Amount</th><th style="width:110px">Status</th></tr></thead>
+                  <tbody id="txTbody">${renderTransactionsHtml()}</tbody>
+                </table>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+    `;
+    document.body.appendChild(dash);
+
+    // populate balances in dashboard
+    const chkSplit = splitCurrency(storedChecking);
+    const chkDisplay = document.getElementById('checkingBalanceDisplay');
+    if(chkDisplay) chkDisplay.innerHTML = `<div class="balance-split"><div class="balance-main">${chkSplit.main}</div><div class="balance-cents">${chkSplit.cents}</div></div>`;
+
+    const savSplit = splitCurrency(storedSavings);
+    const savDisplay = document.getElementById('savingsBalanceDisplay');
+    if(savDisplay) savDisplay.innerHTML = `<div class="balance-split"><div class="balance-main">${savSplit.main}</div><div class="balance-cents">${savSplit.cents}</div></div>`;
+
+    // update header profile (if header shown elsewhere)
+    const navAvatar = document.getElementById('navAvatar'); if(navAvatar) navAvatar.textContent = (storedName || 'A').charAt(0).toUpperCase();
+    const navName = document.getElementById('navProfileName'); if(navName) navName.textContent = storedName;
+
+    // scroll dashboard into view
+    dash.scrollIntoView({behavior:'smooth'});
+  }
+
+  /* ---------------- confirm modal logic ---------------- */
+  let currentConfirmAction = null;
+  function openConfirm(type){
+    currentConfirmAction = type;
+    if(!confirmModal) return;
+    confirmModal.style.display = 'flex';
+    confirmModal.setAttribute('aria-hidden','false');
+
+    if(type === 'transfer'){
+      confirmTitle.textContent = 'Move funds to savings';
+      confirmMessage.textContent = 'Do you want to move your funds to savings?';
+    } else if(type === 'withdraw'){
+      confirmTitle.textContent = 'Withdraw funds';
+      confirmMessage.textContent = 'Proceed to withdraw?';
+    } else {
+      confirmTitle.textContent = 'Confirm';
+      confirmMessage.textContent = 'Are you sure?';
+    }
+  }
+  confirmNo.addEventListener('click', ()=>{ confirmModal.style.display='none'; confirmModal.setAttribute('aria-hidden','true'); currentConfirmAction=null; });
+  confirmYes.addEventListener('click', ()=>{
+    if(!currentConfirmAction){ confirmModal.style.display='none'; confirmModal.setAttribute('aria-hidden','true'); return; }
+    // per request: show repayment message (same for transfer & withdraw)
+    showToast('❌ Complete your second repayment Loan', 3000);
+    confirmModal.style.display='none'; confirmModal.setAttribute('aria-hidden','true');
+    currentConfirmAction = null;
+  });
+
+  /* ---------------- CSV export & show all ---------------- */
+  function downloadCsv(){
+    const header = 'Date,Description,Amount,Status\n';
+    const rows = storedTransactions.map(t => `${t.date},"${t.description}",${t.amount},${t.status}`).join('\n');
+    const csv = header + rows;
+    const blob = new Blob([csv], {type: 'text/csv'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = 'transactions.csv'; document.body.appendChild(a); a.click();
+    a.remove(); URL.revokeObjectURL(url);
+    showToast('CSV exported');
+  }
+
+  function showAll(){
+    const modal = document.createElement('div');
+    modal.className = 'modal';
+    modal.style.display = 'flex';
+    modal.innerHTML = `<div class="box card shadow" style="max-width:760px">
+      <h3>All transactions</h3>
+      <div class="sub" style="margin-bottom:12px">Showing ${storedTransactions.length} recent items</div>
+      <div style="max-height:60vh;overflow:auto">
+        <table class="list"><thead><tr><th>Date</th><th>Description</th><th>Amount</th><th>Status</th></tr></thead>
+        <tbody>${renderTransactionsHtml()}</tbody></table>
+      </div>
+      <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:12px">
+        <button class="btn ghost" onclick="document.body.removeChild(this.closest('.modal'))">Close</button>
+      </div>
+    </div>`;
+    document.body.appendChild(modal);
+    modal.addEventListener('click', (e)=> { if(e.target === modal) document.body.removeChild(modal); });
+  }
+
+  /* ---------------- profile / settings / password ---------------- */
+  function openProfile(){ document.getElementById('profileModal').style.display = 'flex'; }
+  function openSettings(){ document.getElementById('settingsModal').style.display = 'flex'; }
+  function openChangePw(){ document.getElementById('changePwModal').style.display = 'flex'; }
+
+  function saveProfile(){
+    const name = (document.getElementById('profileName').value || '').trim();
+    const email = (document.getElementById('profileEmail').value || '').trim();
+    if(name) storedName = name;
+    if(email) storedEmail = email;
+    showToast('Profile saved');
+    setTimeout(()=> closeModal('profileModal'), 900);
+    const dashWelcome = document.getElementById('dashWelcomeName');
+    if(dashWelcome) dashWelcome.textContent = storedName;
+    const navAvatar = document.getElementById('navAvatar'); if(navAvatar) navAvatar.textContent = (storedName || 'A').charAt(0).toUpperCase();
+    const navName = document.getElementById('navProfileName'); if(navName) navName.textContent = storedName;
+  }
+
+  function saveSettings(){ showToast('Settings saved'); setTimeout(()=> closeModal('settingsModal'), 900); }
+
+  function saveChangePassword(){
+    const cur = document.getElementById('curPw').value || '';
+    const nw = (document.getElementById('newPw').value || '');
+    const cf = (document.getElementById('confirmPw').value || '');
+    if(nw.length < 6){ alert('New password must be at least 6 characters'); return; }
+    if(nw !== cf){ alert('New password and confirm do not match'); return; }
+    if(cur !== storedPassword){ alert('Current password is incorrect'); return; }
+    storedPassword = nw;
+    showToast('Password changed');
+    setTimeout(()=> closeModal('changePwModal'), 900);
+  }
+
+  /* ---------------- logout ---------------- */
+  function logout(){
+    const dash = document.getElementById('appDashboard');
+    if(dash) document.body.removeChild(dash);
+    const LH = document.getElementById('landingHeader');
+    const LM = document.getElementById('landingMain');
+    const LF = document.getElementById('landingFooter');
+    if(LH) LH.style.display = '';
+    if(LM) LM.style.display = '';
+    if(LF) LF.style.display = '';
+    const navAvatar = document.getElementById('navAvatar'); if(navAvatar) navAvatar.textContent = 'A';
+    const navName = document.getElementById('navProfileName'); if(navName) navName.textContent = 'Alexandra';
+    document.body.classList.remove('logged-in');
+    if(profileBlock) profileBlock.classList.add('hidden');
+    showToast('Logged out');
+  }
+
+  /* ---------------- utilities ---------------- */
+  function closeModal(id){
+    const m = document.getElementById(id);
+    if(m) m.style.display = 'none';
+  }
+
+  // close modals when clicking outside
+  window.addEventListener('click', (e)=>{
+    const modals = ['authModal','profileModal','settingsModal','changePwModal','confirmModal','mobileMenu'];
+    for(const id of modals){
+      const el = document.getElementById(id);
+      if(!el) continue;
+      if(el.style.display === 'flex' && e.target === el) el.style.display = 'none';
+    }
+  });
+
+  // set year
+  document.getElementById('year').textContent = new Date().getFullYear();
+</script>
+</body>
+</html>
