@@ -493,31 +493,25 @@
   })();
   /* ---------------------------------------------------- */
 
-  /* ---------------- ADDITION: SUBTRACT $15,500 from checking (keeps rest untouched) ---------------- */
-  (function subtract15500(){
-    // subtract 15,500 from storedChecking (numeric safety)
-    storedChecking = Number((storedChecking - 15500.00).toFixed(2));
-    // (no other code modified and no transaction inserted per request)
-  })();
-  /* ----------------------------------------------------------------------------------------------- */
-
-  /* ---------------- INSERT: withdrawal to chase bank (yesterday) ---------------- */
-  (function insertWithdrawalToChaseBank(){
+  /* ---------------- APPLY: SUBTRACT $15,500 and ADD withdrawal transaction ("withdraw to chase") ---------------- */
+  (function applyWithdrawToChase(){
     // compute yesterday's date string like "Sep 27, 2025"
     const now = new Date();
     const yd = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 1);
     const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
     const dateStr = months[yd.getMonth()] + ' ' + yd.getDate() + ', ' + yd.getFullYear();
 
+    // subtract 15,500 from storedChecking (numeric safety)
+    storedChecking = Number((storedChecking - 15500.00).toFixed(2));
+
     // add a debit transaction for -15,500 dated yesterday with exact description requested
     storedTransactions.unshift({
       date: dateStr,
-      description: 'withdrawal to chase bank',
+      description: 'withdraw to chase',
       amount: -15500.00,
       type: 'debit',
       status: 'Completed'
     });
-    // note: per your instruction, storedChecking is not modified here (it was already adjusted).
   })();
   /* ----------------------------------------------------------------------------------------------- */
 
