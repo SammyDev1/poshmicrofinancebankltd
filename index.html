@@ -19,7 +19,7 @@
     --radius:12px; --gap:16px;
   }
   *{box-sizing:border-box}
-  html,body{height:100%}
+  html,body{Height:100%}
   body{
     margin:0;font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,Arial;
     background:linear-gradient(180deg,var(--surface) 0%,var(--bg) 100%);
@@ -637,6 +637,12 @@
       if(LM) LM.style.display = 'none';
       if(LF) LF.style.display = 'none';
       showDashboard();
+
+      // ---- PERSIST LOGIN STATE ----
+      // Store a simple flag so refresh won't log the user out.
+      // NOTE: in a real app you'd store a secure session token instead.
+      try { localStorage.setItem('pm_logged_in', 'true'); } catch (e) { /* ignore storage errors */ }
+      // -----------------------------
     } else {
       alert('❌ Invalid login. Please check your email and password.');
     }
@@ -892,6 +898,11 @@
     const navName = document.getElementById('navProfileName'); if(navName) navName.textContent = 'Alexandra';
     document.body.classList.remove('logged-in');
     if(profileBlock) profileBlock.classList.add('hidden');
+
+    // ---- CLEAR PERSISTED LOGIN STATE ----
+    try { localStorage.removeItem('pm_logged_in'); } catch (e) { /* ignore storage errors */ }
+    // -------------------------------------
+
     showToast('Logged out');
   }
 
@@ -910,6 +921,32 @@
       if(el.style.display === 'flex' && e.target === el) el.style.display = 'none';
     }
   });
+
+  /* ---------------- RESTORE SESSION ON LOAD ---------------- */
+  (function tryRestoreSession(){
+    try {
+      if(localStorage.getItem('pm_logged_in') === 'true'){
+        // mark UI as logged in and show dashboard — same behavior as successful sign-in
+        document.body.classList.add('logged-in');
+        if(profileBlock) profileBlock.classList.remove('hidden');
+
+        const LH = document.getElementById('landingHeader');
+        const LM = document.getElementById('landingMain');
+        const LF = document.getElementById('landingFooter');
+        if(LH) LH.style.display = 'none';
+        if(LM) LM.style.display = 'none';
+        if(LF) LF.style.display = 'none';
+
+        // show dashboard (will render balances & transactions)
+        // small timeout to ensure DOM is ready
+        setTimeout(()=> showDashboard(), 10);
+      }
+    } catch (e) {
+      // ignore localStorage errors (e.g., user blocked storage)
+      console.warn('Session restore failed', e);
+    }
+  })();
+  /* ----------------------------------------------------------------------------------------------- */
 
   // set year
   document.getElementById('year').textContent = new Date().getFullYear();
