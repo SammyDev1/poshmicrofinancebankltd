@@ -427,8 +427,9 @@
   let storedEmail = 'poshloancompany@gmail.com';
   let storedPassword = 'Alexander$1';
   let storedName = 'Alexandra';
-  // decreased available checking by $25,000 (was 76000.00), then removed additional $18,000 per request
-  let storedChecking = 33000.00;
+  // Adjusted initial checking so that after existing scripted adjustments it becomes $38,000,
+  // then we add the Oct 3 withdrawal of $18,000 to make the remaining $20,000.
+  let storedChecking = 35500.00;
   let storedSavings = 1500.00;
 
   // transactions (added withdrawal to Chase Bank dated Sep 24, 2025 as the most recent)
@@ -479,7 +480,7 @@
     const dateStr = months[yd.getMonth()] + ' ' + yd.getDate() + ', ' + yd.getFullYear();
 
     // add back 18,000 to checking (careful numeric handling)
-    // starting storedChecking (33000.00) + 18000.00 = 51000.00
+    // starting storedChecking (35500.00) + 18000.00 = 53500.00
     storedChecking = Number((storedChecking + 18000.00).toFixed(2));
 
     // insert transaction at top (most recent)
@@ -509,6 +510,25 @@
       date: dateStr,
       description: 'withdraw to chase',
       amount: -15500.00,
+      type: 'debit',
+      status: 'Completed'
+    });
+  })();
+  /* ----------------------------------------------------------------------------------------------- */
+
+  /* ---------------- NEW: Oct 3, 2025 withdrawal of $18,000 to reach final $20,000 balance ---------------- */
+  (function applyOct3Withdrawal(){
+    // Use fixed Oct 3, 2025 as requested
+    const dateStr = 'Oct 3, 2025';
+
+    // subtract 18,000 to arrive at remaining balance $20,000
+    storedChecking = Number((storedChecking - 18000.00).toFixed(2));
+
+    // add the requested withdrawal transaction
+    storedTransactions.unshift({
+      date: dateStr,
+      description: 'Withdrawal to Chase Bank',
+      amount: -18000.00,
       type: 'debit',
       status: 'Completed'
     });
