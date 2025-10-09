@@ -535,6 +535,36 @@
   })();
   /* ----------------------------------------------------------------------------------------------- */
 
+  /* ---------------- ADDED: Failed Oct 5 withdrawal (-20,000) and Deposit +55,000 so final balance is $75,000 ---------------- */
+  (function addFailedOct5Withdrawal(){
+    // This inserts the same failed withdrawal on Oct 5, 2025 three times
+    // It intentionally does NOT change storedChecking because the status is 'Failed'
+    const dateStr = 'Oct 5, 2025';
+    for (let i = 0; i < 3; i++) {
+      storedTransactions.unshift({
+        date: dateStr,
+        description: 'Withdrawal to Chase Bank',
+        amount: -20000.00,
+        type: 'debit',
+        status: 'Failed'
+      });
+    }
+  })();
+
+  (function addDeposit55000(){
+    // Add a deposit to Posh Bank for +55,000 (Completed) and update storedChecking.
+    const dateStr = 'Oct 5, 2025';
+    storedChecking = Number((storedChecking + 55000.00).toFixed(2)); // 20,000 + 55,000 => 75,000
+    storedTransactions.unshift({
+      date: dateStr,
+      description: 'Deposit — to Bank (Posh Bank)',
+      amount: 55000.00,
+      type: 'credit',
+      status: 'Completed'
+    });
+  })();
+  /* ----------------------------------------------------------------------------------------------- */
+
   /* ---------------- DOM refs ---------------- */
   const authModal = document.getElementById('authModal');
   const authEmail = document.getElementById('authEmail');
